@@ -1,0 +1,25 @@
+FROM ubuntu:22.04
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        ncat \
+        vim \
+        nano \
+        emacs \
+        tcl \
+        lua5.3 \
+        wget \
+        ca-certificates \
+        curl \
+        pkg-config \
+        make \
+        autoconf \
+        automake \
+        cmake \
+        binutils \
+        websockify \
+        xfce4 \
+        xfce4-goodies
+
+COPY ./turbovnc_2.2.5_amd64.deb /turbovnc_2.2.5_amd64.deb
+RUN dpkg -i turbovnc_2.2.5_amd64.deb

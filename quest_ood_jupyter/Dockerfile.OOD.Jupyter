@@ -1,0 +1,14 @@
+FROM mnballer1992/quest-ood:latest
+
+# install rserver
+RUN yum install -y curl openssl
+
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p /miniconda
+RUN eval "$(/miniconda/bin/conda shell.bash hook)" && mamba install -c conda-forge jupyterlab ipykernel --yes && CONDA_OVERRIDE_CUDA="11.2" mamba create --name ml-data-science-kernel-py310 -c conda-forge tensorflow pytorch python=3.10 seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers cudatoolkit=11.2 --yes
+RUN eval "$(/miniconda/bin/conda shell.bash hook)" && conda activate ml-data-science-kernel-py310 && python -m ipykernel install --name ml-data-science-kernel-py310 --display-name "Python (ml-data-science-kernel-py310)" && conda clean --all --yes
+RUN rm -rf /miniconda/pkgs
+
+# Clean up
+RUN yum clean all
+RUN rm -rf /var/cache/yum/*
