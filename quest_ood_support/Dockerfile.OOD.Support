@@ -1,0 +1,21 @@
+FROM mnballer1992/quest-ood:ubuntu2204
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        libqt5gui5 \
+        git
+RUN strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+RUN apt clean --yes
+
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p /minimamba
+
+RUN mkdir -p /opt
+RUN cd /opt && git clone --depth 1 https://github.com/NICALab/SUPPORT.git
+RUN eval "$(/minimamba/bin/conda shell.bash hook)" && mamba env create -f /opt/SUPPORT/env.yml --name nicalab-support-env 
+RUN eval "$(/minimamba/bin/conda shell.bash hook)" && conda activate nicalab-support-env && CONDA_OVERRIDE_CUDA="11.8" mamba install 'pytorch[version=2.1,build=*cuda11.8*]' torchvision torchaudio -c pytorch -c nvidia --yes
+RUN rm -rf /minimamba/pkgs
+RUN rm /Mambaforge-Linux-x86_64.sh 
+
+ENV PATH="/minimamba/envs/nicalab-support-env/bin:/minimamba/condabin:${PATH}"
+WORKDIR /opt/SUPPORT
