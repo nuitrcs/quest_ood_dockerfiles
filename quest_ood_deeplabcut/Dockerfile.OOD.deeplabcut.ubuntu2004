@@ -26,6 +26,7 @@ RUN apt-get update \
         at-spi2-core \
         xfce4-goodies \
         locales \
+        x11-xserver-utils \
         dbus-x11
 
 RUN locale-gen en_US.UTF-8
