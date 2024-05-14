@@ -1,0 +1,39 @@
+FROM mnballer1992/quest-ood:ubuntu2204
+
+# install tools
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        curl \
+        git \
+        wget \
+        python3-tk \
+        libglib2.0-0 \
+        libsm6 \
+        libxrender1 \
+        libxrender-dev \
+        libxext6 \
+        ffmpeg \
+        x11-xserver-utils \
+        x11-apps \
+        binutils \
+        build-essential \
+        ca-certificates
+
+# install conda
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p /minimamba
+RUN rm /Mambaforge-Linux-x86_64.sh
+
+RUN eval "$(/minimamba/bin/conda shell.bash hook)" && mamba create --yes --name simba python=3.6
+
+ENV PATH="/minimamba/envs/simba/bin:/minimamba/condabin:${PATH}"
+
+RUN python -m pip install pip==21.2.2
+RUN python -m pip install --upgrade setuptools
+RUN git clone --depth 1 https://github.com/sgoldenlab/simba.git
+WORKDIR simba
+RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+RUN python -m pip install simba-uw-tf-dev==1.88.9 --no-deps
+RUN sed -i 's/multiprocessing.cpu_count()/int(os.environ.get("SLURM_NPROCS", "1"))/g' /minimamba/envs/simba/lib/python3.6/site-packages/simba/mixins/image_mixin.py
+RUN sed -i 's/multiprocessing.cpu_count()/int(os.environ.get("SLURM_NPROCS", "1"))/g' /minimamba/envs/simba/lib/python3.6/site-packages/simba/utils/read_write.py
+RUN sed -i 's/multiprocessing.cpu_count()/int(os.environ.get("SLURM_NPROCS", "1"))/g' /minimamba/envs/simba/lib/python3.6/site-packages/simba/video_processors/extract_frames.py
