@@ -1,0 +1,34 @@
+FROM ubuntu:20.04
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        ncat \
+        vim \
+        nano \
+        emacs \
+        xauth \
+        tcl \
+        lua5.3 \
+        wget \
+        ca-certificates \
+        curl \
+        pkg-config \
+        make \
+        autoconf \
+        automake \
+        cmake \
+        binutils \
+        websockify \
+        xfce4 \
+        at-spi2-core \
+        xfce4-goodies \
+        locales \
+        x11-xserver-utils \
+        dbus-x11
+
+RUN locale-gen en_US.UTF-8
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
+
+COPY ./turbovnc_2.2.5_amd64.deb /turbovnc_2.2.5_amd64.deb
+RUN dpkg -i turbovnc_2.2.5_amd64.deb
