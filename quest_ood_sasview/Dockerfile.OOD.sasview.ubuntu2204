@@ -1,4 +1,4 @@
-FROM mnballer1992/quest-ood:ubuntu2204
+FROM nuitrcs/quest-ood:ubuntu2204
 
 ENV NVIDIA_VISIBLE_DEVICES="all"
 ENV NVIDIA_DRIVER_CAPABILITIES="compute,utility,display"
@@ -17,17 +17,19 @@ RUN apt-get update \
         nvidia-cuda-toolkit \
         python3-pyopencl
 
+RUN strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+
 RUN git clone --depth 1 --branch v5.0.6 https://github.com/SasView/sasview.git sasview
 RUN git clone --depth 1 --branch v1.0.7 https://github.com/SasView/sasmodels.git sasmodels
 RUN git clone --depth=1 --branch=v0.9.1 https://github.com/bumps/bumps.git ../bumps
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install wheel setuptools
+RUN python3 -m pip install matplotlib==2.2.5
 RUN python3 -m pip install numpy scipy==1.7.3 docutils "pytest<6" sphinx unittest-xml-reporting
 RUN python3 -m pip install tinycc h5py sphinx pyparsing html5lib reportlab==3.6.6 pybind11 appdirs
 RUN python3 -m pip install six numba mako ipython qtconsole==5.3.0 xhtml2pdf unittest-xml-reporting pylint
 RUN python3 -m pip install qt5reactor periodictable uncertainties debugpy "ipykernel<6"
-RUN python3 -m pip install matplotlib==2.2.5
 RUN python3 -m pip install lxml
 
 WORKDIR /sasmodels
@@ -52,4 +54,3 @@ RUN python3 setup.py build
 RUN python3 -m pip install .
 
 WORKDIR /
-RUN strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
