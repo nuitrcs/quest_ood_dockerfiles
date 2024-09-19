@@ -1,0 +1,4 @@
+FROM nuitrcs/quest-ood-base:ubi810
+
+
+RUN yum -y groupinstall "Xfce"

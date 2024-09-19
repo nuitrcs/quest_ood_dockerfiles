@@ -1,0 +1,31 @@
+FROM registry.access.redhat.com/ubi8:8.10
+
+# install turboVNC and websockify
+RUN yum install -y https://yum.osc.edu/ondemand/3.0/compute/el8/x86_64/turbovnc-2.2.5-1.el8.x86_64.rpm
+RUN yum install -y https://yum.osc.edu/ondemand/3.0/compute/el8/x86_64/python3-websockify-0.10.0-1.el8.noarch.rpm
+
+# Install vim, emacs, nano, tcl, and lua
+RUN yum install -y python3-numpy
+RUN yum -y install nmap-ncat \
+                   vim \
+                   nano \
+                   emacs \
+                   tcl \
+                   lua \
+                   xorg-x11-xauth \
+                   xorg-x11-xkb-utils\
+                   libicu \
+                   libicu-devel \
+                   gcc \
+                   gcc-c++ \
+                   gcc-gfortran \
+                   make \
+                   autoconf \
+                   automake \
+                   cmake \
+                   hostname \
+                   mesa-libGLU
+
+RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN yum install -y glibc-langpack-en; sed -i 's/^LANG=.*/LANG="en_US.utf8"/' /etc/locale.conf
+ENV LANG=en_US.utf8

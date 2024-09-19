@@ -1,0 +1,3 @@
+FROM nuitrcs/quest-ood-base:ubi810
+
+RUN dnf -y groupinstall gnome

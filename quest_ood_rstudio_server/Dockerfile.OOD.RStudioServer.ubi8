@@ -1,0 +1,8 @@
+FROM nuitrcs/quest-ood-base:ubi810
+
+RUN yum install -y https://download2.rstudio.org/server/rhel8/x86_64/rstudio-server-rhel-2024.04.2-764-x86_64.rpm
+RUN yum install -y openssl-devel
+
+RUN dnf module enable -y nodejs:20
+RUN dnf install -y nodejs
+RUN npx @puppeteer/browsers install --path=/opt chrome@114.0.5735.90
