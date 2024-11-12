@@ -11,9 +11,8 @@ RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p /miniconda
 RUN eval "$(/miniconda/bin/conda shell.bash hook)" && mamba install -c conda-forge jupyterlab jupyter-server-proxy notebook=6 ipykernel --yes
 
 # Create a ML Data Science Kernel
-RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12" mamba create --name ml-data-science-kernel-py311 -c conda-forge python=3.11 tensorflow pytorch seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers --yes && rm -rf /miniconda/pkgs
+RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12.4" mamba create --name ml-data-science-kernel-py311 -c conda-forge -c nvidia python=3.11 tensorflow pytorch::pytorch pytorch-cuda=12.4 seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers --yes && rm -rf /miniconda/pkgs
 RUN eval "$(/miniconda/bin/conda shell.bash hook)" && conda activate ml-data-science-kernel-py311 && python -m ipykernel install --name ml-data-science-kernel-py311 --display-name "Python (ml-data-science-kernel-py311)" && conda clean --all --yes
-
 
 RUN rm /Mambaforge-Linux-x86_64.sh
 

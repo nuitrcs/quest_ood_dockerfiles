@@ -1,0 +1,17 @@
+FROM nuitrcs/quest-ood-xfce:ubi810
+
+# either you can set
+# export USE_WOLFRAM_LD_LIBRARY_PATH=1
+# or install the necessary QT/X11 libraries in the container: https://support.wolfram.com/59044
+RUN yum -y install \
+    fontconfig \
+    freetype \
+    libX11 \
+    libxcb \
+    libXext \
+    libxkbcommon \
+    libxkbcommon-x11 \
+    xcb-util-image \
+    xcb-util-keysyms \
+    xcb-util-renderutil \
+    xcb-util-wm
