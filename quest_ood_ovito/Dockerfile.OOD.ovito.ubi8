@@ -1,0 +1,7 @@
+FROM nuitrcs/quest-ood-xfce:ubi810
+
+RUN yum install -y VirtualGL libxcb xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm libglvnd-opengl libglvnd-glx
+
+RUN yum install -y wget
+RUN wget https://www.ovito.org/download/master/ovito-basic-3.11.1-x86_64.tar.xz
+RUN tar -xf ovito-basic-3.11.1-x86_64.tar.xz

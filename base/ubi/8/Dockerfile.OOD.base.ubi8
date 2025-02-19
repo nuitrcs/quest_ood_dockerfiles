@@ -29,4 +29,14 @@ RUN yum -y install nmap-ncat \
 
 RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN yum install -y glibc-langpack-en; sed -i 's/^LANG=.*/LANG="en_US.utf8"/' /etc/locale.conf
+
+# munge and slurm stuff
+ARG MUNGEUSER=493
+ARG MUNGEGROUP=493
+ARG SLURMUSER=496
+ARG SLURMGROUP=494
+RUN groupadd -f -g $SLURMGROUP slurm \
+    && useradd --no-create-home -u $SLURMUSER -g slurm  -s /bin/bash slurm
+RUN groupadd -f -g $MUNGEGROUP munge \
+    && useradd --no-create-home -u $MUNGEUSER -g munge -s /sbin/nologin munge
 ENV LANG=en_US.utf8

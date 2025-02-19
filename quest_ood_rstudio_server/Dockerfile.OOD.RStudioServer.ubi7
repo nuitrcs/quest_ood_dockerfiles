@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi7/ubi:7.9
 
 RUN yum install -y rh-nodejs14 hostname
-RUN yum install -y https://s3.amazonaws.com/rstudio-ide-build/server/rhel8/x86_64/rstudio-server-rhel-2024.09.1-394-x86_64.rpm
-RUN yum install -y unixODBC hdf5-devel hdf5 udunits2-devel udunits2 openssh-server openssh-clients patch freetype-devel libpng-devel libuuid-devel libX11-devel libXext-devel libxcb-devel pixman fontconfig-devel pcre-devel mesa-libGL-devel libXrender-devel graphite2 atlas file libtool
+RUN yum install -y https://s3.amazonaws.com/rstudio-ide-build/server/centos7/x86_64/rstudio-server-rhel-2023.12.1-402-x86_64.rpm
+RUN yum install -y unixODBC hdf5-devel hdf5 udunits2-devel udunits2 openssh-server openssh-clients patch freetype-devel libpng-devel libuuid-devel libX11-devel libXext-devel libxcb-devel pixman fontconfig-devel pcre-devel mesa-libGL-devel libXrender-devel graphite2 atlas file libtool xorg-x11-server-Xvfb libX11-devel xorg-x11-server-common xorg-x11-xauth libXext-devel
 RUN  yum install -y wget epel-release
 
 # Download a specific Chrome for Testing version.

@@ -4,16 +4,16 @@ FROM nuitrcs/quest-ood-base:ubi810
 RUN yum install -y curl openssl
 
 # Install Mamba
-RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-RUN bash Mambaforge-$(uname)-$(uname -m).sh -b -p /miniconda
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+RUN bash Miniforge3-$(uname)-$(uname -m).sh -b -p /miniconda
+RUN rm Miniforge3-$(uname)-$(uname -m).sh
 
 ENV PATH=/miniconda/bin/:$PATH
 ARG VERSION=4.93.1
 
 RUN curl -fOL https://github.com/coder/code-server/releases/download/v$VERSION/code-server-$VERSION-amd64.rpm
 RUN rpm -i code-server-$VERSION-amd64.rpm
-
-RUN rm /Mambaforge-Linux-x86_64.sh
+RUN rm code-server-$VERSION-amd64.rpm
 
 # Clean up
 RUN yum clean all

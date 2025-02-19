@@ -8,3 +8,5 @@ RUN yum install -y openssl-devel
 RUN dnf module enable -y nodejs:20
 RUN dnf install -y nodejs
 RUN npx @puppeteer/browsers install --path=/opt chrome@114.0.5735.90
+
+RUN yum install -y xorg-x11-server-Xvfb libX11-devel xorg-x11-server-common xorg-x11-xauth libXext-devel

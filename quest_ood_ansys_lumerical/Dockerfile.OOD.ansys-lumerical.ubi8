@@ -1,5 +1,5 @@
-FROM nuitrcs/quest-ood-base:ubi810
+FROM nuitrcs/quest-ood-xfce:ubi810
 
-RUN dnf -y groupinstall gnome
-
+# You can find the Ansys Lumerical needs here: https://optics.ansys.com/hc/en-us/articles/24048501427987-Required-libraries-for-Ansys-Lumerical-on-Linux
+#
 RUN yum install -y --skip-broken bash-4.4.20-4.el8_6.x86_64 coreutils-8.30-15.el8.x86_64 coreutils-single-8.30-15.el8.x86_64 glibc-2.28-236.el8.7.x86_64 libglvnd-glx-1:1.3.4-1.el8.x86_64 mesa-libGLU-9.0.0-15.el8.x86_64 libICE-1.0.9-15.el8.x86_64 libSM-1.2.3-1.el8.x86_64 libX11-xcb-1.6.8-6.el8.x86_64 libX11-1.6.8-6.el8.x86_64 libXdamage-1.1.4-14.el8.x86_64 libXext-1.3.4-1.el8.x86_64 libXfixes-5.0.3-7.el8.x86_64 libXft-2.3.3-1.el8.x86_64 libXt-1.1.5-12.el8.x86_64 bzip2-libs-1.0.6-26.el8.x86_64 libxcrypt-4.1.1-6.el8.x86_64 libedit-3.1-23.20170329cvs.el8.x86_64 fontconfig-2.13.1-4.el8.x86_64 freetype-2.9.1-9.el8.x86_64 libgcc-8.5.0-20.el8.x86_64 gdbm-libs-1:1.18-2.el8.x86_64 freeglut-3.0.0-8.el8.x86_64 libtool-ltdl-2.4.6-25.el8.x86_64  xz-libs-5.2.4-4.el8_6.x86_64 libnsl-2.28-236.el8.7.x86_64 numactl-libs-2.0.12-13.el8.x86_64 sqlite-libs-3.26.0-18.el8_8.x86_64 libstdc++-8.5.0-20.el8.x86_64 systemd-libs-239-78.el8.x86_64 ncurses-compat-libs-6.1-10.20180224.el8.x86_64 libuuid-2.32.1-43.el8.x86_64 libxcb-1.13.1-1.el8.x86_64 xcb-util-wm-0.4.1-12.el8.x86_64 xcb-util-image-0.4.0-9.el8.x86_64 xcb-util-keysyms-0.4.0-7.el8.x86_64 xcb-util-renderutil-0.3.9-10.el8.x86_64 libxkbcommon-x11-0.9.1-1.el8.x86_64 libxkbcommon-0.9.1-1.el8.x86_64 libxml2-2.9.7-16.el8_8.1.x86_64 libxslt-1.1.32-6.el8.x86_64 zlib-1.2.11-25.el8.x86_64 redhat-lsb

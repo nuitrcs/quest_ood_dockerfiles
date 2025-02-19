@@ -58,7 +58,7 @@ RUN strip --remove-section=.note.ABI-tag /usr/local/lib/python3.8/dist-packages/
 
 ENV DLClight=False
 
-RUN git clone --depth 1 --branch v2.3.9 https://github.com/DeepLabCut/DeepLabCut.git
+RUN git clone --depth 1 --branch v2.3.10 https://github.com/DeepLabCut/DeepLabCut.git
 RUN sed -i 's/multiprocessing.cpu_count()/int(os.environ.get("SLURM_NPROCS", multiprocessing.cpu_count()))/g' /DeepLabCut/deeplabcut/pose_estimation_tensorflow/datasets/pose_tensorpack.py
 RUN sed -i 's/os.cpu_count()/int(os.environ.get("SLURM_NPROCS", os.cpu_count()))/g' /DeepLabCut/deeplabcut/utils/make_labeled_video.py
 RUN cd /DeepLabCut && python3 -m pip install ".[gui,tf]"
