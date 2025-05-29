@@ -1,4 +1,4 @@
-FROM docker.io/ollama/ollama:0.5.7
+FROM docker.io/ollama/ollama:0.6.6
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \

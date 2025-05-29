@@ -1,0 +1,14 @@
+FROM nuitrcs/quest-ood:ubuntu2204
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        libgl1-mesa-glx \
+        python3-vtk9 \
+        python3-pip \
+        nodejs \
+        xvfb
+
+RUN python3 -m pip install jupyterlab jupyter-server-proxy pyvista trame "numpy<2" 
+RUN python3 -m pip install ipykernel
+RUN python3 -m ipykernel install --name pyvista --display-name "Python (PyVista)"
+RUN python3 -m pip install nbclassic

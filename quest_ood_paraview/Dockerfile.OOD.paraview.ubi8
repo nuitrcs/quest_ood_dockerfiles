@@ -1,0 +1,52 @@
+FROM nuitrcs/quest-ood-xfce:ubi810
+
+# this can be found here https://gitlab.kitware.com/paraview/paraview-superbuild/-/tree/master/.gitlab/ci/docker/centos8?ref_type=heads
+#
+
+# Install build requirements.
+RUN dnf install -y --setopt=install_weak_deps=False \
+    freeglut-devel graphviz \
+    libxcb-devel libXt-devel xcb-util-wm xcb-util \
+    xcb-util-image xcb-util-keysyms xcb-util-renderutil \
+    xcb-util-cursor libXcursor-devel mesa-libGL-devel mesa-libEGL-devel \
+    libxkbcommon-devel libxkbcommon-x11 file mesa-dri-drivers autoconf \
+    automake libtool chrpath bison flex libXrandr-devel \
+    alsa-lib-devel mesa-vulkan-devel
+
+# Install development tools
+RUN dnf install -y --setopt=install_weak_deps=False \
+    git-lfs
+
+# Install toolchains.
+RUN dnf install -y --setopt=install_weak_deps=False \
+    gcc-toolset-10-toolchain \
+    gcc-toolset-10-gcc \
+    gcc-toolset-10-gcc-c++ \
+    gcc-toolset-10-gcc-gfortran
+
+# Install the nvidia repository.
+RUN dnf config-manager --add-repo \
+    https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo
+
+# Install CUDA toolchains.
+RUN dnf install -y \
+    cuda-compiler-12-2 cuda-cudart-devel-12-2 cuda-toolkit-12-2
+
+RUN git clone --recursive --branch v5.13.2 https://gitlab.kitware.com/paraview/paraview-superbuild.git
+RUN cd /paraview-superbuild && git submodule update
+
+## Confogure build environment
+
+RUN yum install -y patchelf
+WORKDIR /paraview-superbuild/
+RUN .gitlab/ci/cmake.sh
+RUN .gitlab/ci/ninja.sh
+RUN .gitlab/ci/sccache.sh
+ENV PATH=/paraview-superbuild/.gitlab:/paraview-superbuild/.gitlab/cmake/bin:$PATH
+
+WORKDIR /
+RUN mkdir -p /opt/paraview-build
+RUN source /opt/rh/gcc-toolset-10/enable && cd /opt/paraview-build && cmake -C /paraview-superbuild/.gitlab/ci/configure_linux_osmesa_shared.cmake -D paraview_SOURCE_SELECTION=git -D paraview_GIT_TAG=v5.13.2 /paraview-superbuild
+RUN cd /opt/paraview-build && cmake --build . --parallel 4
+RUN cd /opt/paraview-build && cmake -D ENABLE_scipy=OFF /paraview-superbuild
+RUN cd /opt/paraview-build && cmake --install .

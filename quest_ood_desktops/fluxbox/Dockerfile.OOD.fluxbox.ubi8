@@ -1,6 +1,7 @@
 FROM nuitrcs/quest-ood-base:ubi810
 
 RUN dnf install -y fluxbox
+RUN dnf install -y xorg-x11-server-utils
 
 # Clean up the cache
 RUN yum clean all

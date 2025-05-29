@@ -40,3 +40,8 @@ RUN groupadd -f -g $SLURMGROUP slurm \
 RUN groupadd -f -g $MUNGEGROUP munge \
     && useradd --no-create-home -u $MUNGEUSER -g munge -s /sbin/nologin munge
 ENV LANG=en_US.utf8
+
+RUN curl -L -o /tmp/singularity-ce-4.3.1-1.el8.x86_64.rpm https://github.com/sylabs/singularity/releases/download/v4.3.1/singularity-ce-4.3.1-1.el8.x86_64.rpm
+RUN dnf -yq install /tmp/singularity-ce-4.3.1-1.el8.x86_64.rpm
+RUN rm /tmp/singularity-ce-4.3.1-1.el8.x86_64.rpm
+RUN singularity config global --set "allow setuid" "no"

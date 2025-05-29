@@ -1,7 +1,7 @@
 FROM nuitrcs/quest-ood-base:ubi810
 
 # INstall some prereqs
-RUN yum install -y curl openssl
+RUN yum install -y curl openssl git
 
 # Install Mamba
 RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
