@@ -1,0 +1,6 @@
+FROM nuitrcs/quest-ood-base:ubi810
+
+# INstall some prereqs
+RUN yum install -y curl openssl rsync net-tools
+
+RUN yum clean all

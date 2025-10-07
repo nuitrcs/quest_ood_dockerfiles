@@ -1,0 +1,47 @@
+FROM ubuntu:22.04
+  
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes \
+        ncat \
+        vim \
+        nano \
+        emacs \
+        xauth \
+        tcl \
+        lua5.3 \
+        wget \
+        ca-certificates \
+        curl \
+        pkg-config \
+        make \
+        autoconf \
+        automake \
+        cmake \
+        binutils \
+        websockify \
+        xfce4 \
+        at-spi2-core \
+        xfce4-goodies \
+        locales \
+        dbus-x11
+
+RUN locale-gen en_US.UTF-8
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
+
+COPY ./turbovnc_2.2.5_amd64.deb /turbovnc_2.2.5_amd64.deb
+RUN dpkg -i turbovnc_2.2.5_amd64.deb
+
+
+RUN apt-get update -yy && \
+    apt-get install -yy --no-install-recommends python3 python3-pip locales build-essential cmake zip unzip curl git libgl1-mesa-dev linux-libc-dev libnlopt-dev libnlopt-cxx-dev libtirpc-dev autoconf automake libtool pkg-config libltdl-dev meson python3-jinja2 bison libxi-dev libxtst-dev libx11-dev libxft-dev libxext-dev libx11-dev libgles2-mesa-dev m4 libncurses5-dev libwxgtk3.0-gtk3-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop libgtk-3-dev pkg-config autoconf-archive flex '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev libegl1-mesa-dev
+
+RUN git clone --recurse-submodules https://github.com/AdvancedPhotonSource/XRF-Maps.git
+RUN git clone https://github.com/AdvancedPhotonSource/uProbeX.git
+
+RUN cd XRF-Maps && git submodule update --remote && mkdir build && cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install hdf5 netcdf-c yaml-cpp zeromq tiff jsoncpp cppzmq opencv
+RUN cd /XRF-Maps/vcpkg && ./vcpkg install hdf5 netcdf-c yaml-cpp zeromq tiff jsoncpp cppzmq opencv qtbase qtcharts && rm -rf /XRF-Maps/vcpkg/buildtrees /XRF-Maps/vcpkg/downloads/
+
+RUN cd XRF-Maps/build && cmake -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_WITH_ZMQ=ON -DBUILD_WITH_TIRPC=ON .. && cmake --build . --parallel=2
+RUN cd /uProbeX && sed -i 's/c++1y/c++17/g' CMakeLists.txt && cp src/mvc/ROISelectorDialog.h src/mvc/RoiSelectorDialog.h && mkdir -p build && cd build && cmake -DXRF_Maps_DIR=/XRF-Maps/build -DCMAKE_TOOLCHAIN_FILE=/XRF-Maps/vcpkg/scripts/buildsystems/vcpkg.cmake -DBUILD_WITH_TIRPC=ON ..
+RUN cd /uProbeX/build && cmake --build . --parallel=2

@@ -9,7 +9,7 @@ RUN bash Miniforge3-$(uname)-$(uname -m).sh -b -p /miniconda
 RUN rm Miniforge3-$(uname)-$(uname -m).sh
 
 # Install Jupyter into the base environment
-RUN eval "$(/miniconda/bin/conda shell.bash hook)" && mamba install -c conda-forge jupyterlab jupyter-server-proxy notebook=6 ipykernel --yes
+RUN eval "$(/miniconda/bin/conda shell.bash hook)" && mamba install -c conda-forge jupyterlab jupyter-server-proxy notebook=6 ipykernel quarto --yes && python3 -m pip install jupyterlab-quarto
 
 # Create a ML Data Science Kernel
 RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12" mamba create --name ml-data-science-kernel-py311 -c conda-forge -c nvidia python=3.11 tensorflow[build=*cuda*] pytorch::pytorch pytorch-cuda=12.1 seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers --yes && rm -rf /miniconda/pkgs
