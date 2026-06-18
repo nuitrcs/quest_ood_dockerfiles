@@ -20,8 +20,13 @@ RUN jupyter serverextension enable --py jupyter_resource_usage --sys-prefix
 RUN jupyter nbextension install --py jupyter_resource_usage --sys-prefix
 RUN jupyter nbextension enable --py jupyter_resource_usage --sys-prefix
 
-# Create a ML Data Science Kernel
-RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12" mamba create --name ml-data-science-kernel-py311 -c conda-forge -c nvidia python=3.11 tensorflow[build=*cuda*] pytorch::pytorch pytorch-cuda=12.1 seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers --yes && rm -rf /miniconda/pkgs
+COPY ./ml-data-science-kernel-py311_fixed.yml /ml-data-science-kernel-py311_fixed.yml
+
+# Create ML Data Science Kernel
+#RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12" mamba create --name ml-data-science-kernel-py311 -c conda-forge -c nvidia python=3.11 tensorflow[build=*cuda*] pytorch::pytorch pytorch-cuda=12.1 seaborn h5py numba pandas matplotlib ipykernel scikit-learn scikit-image openpyxl sqlalchemy numexpr pyspark dask spacy transformers --yes && rm -rf /miniconda/pkgs
+
+RUN eval "$(/miniconda/bin/conda shell.bash hook)" && CONDA_OVERRIDE_CUDA="12" mamba env create -f /ml-data-science-kernel-py311_fixed.yml --name ml-data-science-kernel-py311 --yes && rm -rf /miniconda/pkgs
+
 RUN eval "$(/miniconda/bin/conda shell.bash hook)" && conda activate ml-data-science-kernel-py311 && python -m ipykernel install --name ml-data-science-kernel-py311 --display-name "Python (ml-data-science-kernel-py311)" && conda clean --all --yes
 
 # Clean up
